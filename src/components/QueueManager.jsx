@@ -21,7 +21,7 @@ const QueueManager = ({ stalls, onNavigate }) => {
 
   return (
     <div className="queue-manager mt-4">
-      <div className="card highlight-card mb-4" style={{ background: 'linear-gradient(145deg, rgba(16, 185, 129, 0.15), rgba(30, 41, 59, 0.8))', borderColor: 'rgba(16, 185, 129, 0.3)' }}>
+      <div className="card highlight-card mb-4" style={{ background: 'var(--card-bg)', borderColor: 'var(--card-border)', boxShadow: '0 8px 32px rgba(0,0,0,0.1)' }}>
         <div className="card-header highlight" style={{ color: 'var(--status-clear)' }}>
           <Timer className="icon highlight-icon" size={20} />
           <h3>Optimization: Fastest Food</h3>
@@ -40,8 +40,25 @@ const QueueManager = ({ stalls, onNavigate }) => {
             <div key={stall.id} className="status-item">
               <div className="item-info">
                 <span className="item-name" style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                  {stall.category === 'coffee' ? <Coffee size={16} color="#94a3b8" /> : <Utensils size={16} color="#94a3b8" />}
-                  {stall.name}
+                  {stall.category === 'coffee' ? <Coffee size={16} color="var(--text-muted)" /> : <Utensils size={16} color="var(--text-muted)" />}
+                  <div style={{ display: 'flex', flexDirection: 'column' }}>
+                    <span style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                      {stall.name}
+                      <div style={{ display: 'flex', gap: '4px' }}>
+                        {(stall.diet === 'veg' || stall.diet === 'both') && (
+                          <div title="Veg" style={{ width: '8px', height: '8px', border: '1px solid #10b981', padding: '1px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                            <div style={{ width: '4px', height: '4px', background: '#10b981', borderRadius: '50%' }} />
+                          </div>
+                        )}
+                        {(stall.diet === 'non-veg' || stall.diet === 'both') && (
+                          <div title="Non-Veg" style={{ width: '8px', height: '8px', border: '1px solid #ef4444', padding: '1px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                            <div style={{ width: '4px', height: '4px', background: '#ef4444', borderRadius: '50%' }} />
+                          </div>
+                        )}
+                      </div>
+                    </span>
+                    {stall.serving && <span style={{ fontSize: '0.7rem', color: 'var(--text-muted)', fontWeight: 'normal' }}>{stall.serving}</span>}
+                  </div>
                 </span>
                 <span className="wait-time text-sm" style={{ color: stall.waitTime > 15 ? 'var(--status-congested)' : 'var(--text-muted)' }}>
                   {stall.waitTime} min wait
@@ -75,7 +92,7 @@ const QueueManager = ({ stalls, onNavigate }) => {
           {washrooms.map(stall => (
             <div key={stall.id} className="status-item">
               <span className="item-name" style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                <Droplets size={16} color="#94a3b8" />
+                <Droplets size={16} color="var(--text-muted)" />
                 {stall.name}
               </span>
               <div className="action-btn-wrapper">
@@ -97,7 +114,7 @@ const QueueManager = ({ stalls, onNavigate }) => {
           {exits.map(stall => (
             <div key={stall.id} className="status-item">
               <span className="item-name" style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                <MapPin size={16} color="#94a3b8" />
+                <MapPin size={16} color="var(--text-muted)" />
                 {stall.name}
               </span>
               <div className="action-btn-wrapper">

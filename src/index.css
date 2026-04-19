@@ -7,6 +7,13 @@
   --primary-glow: rgba(59, 130, 246, 0.5);
   --text-main: #f8fafc;
   --text-muted: #94a3b8;
+  --text-inverse: #ffffff;
+  
+  --surface-subtle: rgba(255, 255, 255, 0.05);
+  --surface-inner: rgba(0, 0, 0, 0.2);
+  
+  --nav-bg: rgba(15, 23, 42, 0.8);
+  --nav-bg-solid: #0f172a;
   
   --status-clear: #10b981;
   --status-moderate: #f59e0b;
@@ -14,6 +21,25 @@
   
   --font-family: 'Outfit', system-ui, -apple-system, sans-serif;
   --nav-height: 70px;
+  --ticket-bg-main: #1e293b;
+  --ticket-bg-stub: #0f172a;
+}
+
+.light-theme {
+  --bg-dark: #f8fafc;
+  --bg-darker: #f1f5f9;
+  --card-bg: rgba(255, 255, 255, 0.9);
+  --card-border: rgba(0, 0, 0, 0.08);
+  --text-main: #1e293b;
+  --text-muted: #64748b;
+  --text-inverse: #ffffff;
+  --primary-glow: rgba(59, 130, 246, 0.15);
+  --nav-bg: rgba(241, 245, 249, 0.9);
+  --nav-bg-solid: #f1f5f9;
+  --surface-subtle: rgba(0, 0, 0, 0.03);
+  --surface-inner: rgba(0, 0, 0, 0.05);
+  --ticket-bg-main: #ffffff;
+  --ticket-bg-stub: #f8fafc;
 }
 
 * {
@@ -30,6 +56,10 @@ body {
   min-height: 100dvh;
   display: flex;
   justify-content: center;
+}
+
+h1, h2, h3, h4 {
+  color: var(--text-main);
 }
 
 .app-container {
@@ -55,12 +85,14 @@ body {
 
 /* Bottom Navigation */
 .bottom-nav {
-  position: absolute;
-  bottom: calc(1rem + env(safe-area-inset-bottom));
-  left: 1rem;
-  width: calc(100% - 2rem);
-  height: var(--nav-height);
-  background: rgba(15, 23, 42, 0.85);
+  position: fixed;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: calc(100% - 32px);
+  max-width: 380px;
+  height: 64px;
+  background: var(--nav-bg);
   backdrop-filter: blur(15px);
   border: 1px solid rgba(148, 163, 184, 0.25);
   border-radius: 24px;
@@ -87,6 +119,7 @@ body {
 .nav-item span {
   font-size: 0.65rem;
   font-weight: 500;
+  color: inherit;
 }
 
 .nav-item.active {
@@ -101,10 +134,9 @@ body {
 .app-header {
   display: flex;
   align-items: center;
-  justify-content: center;
-  gap: 10px;
-  padding: 1.5rem 1rem;
-  background: rgba(15, 23, 42, 0.8);
+  justify-content: space-between;
+  padding: 1rem 1.25rem;
+  background: var(--nav-bg);
   backdrop-filter: blur(10px);
   position: sticky;
   top: 0;
@@ -116,6 +148,7 @@ body {
   font-size: 1.25rem;
   font-weight: 600;
   letter-spacing: 0.5px;
+  color: var(--text-main);
 }
 
 .header-icon {
@@ -160,6 +193,28 @@ body {
   66%  { border-color: rgb(0, 0, 255);   box-shadow: 0 0 25px rgba(0, 0, 255, 0.6); }
   83%  { border-color: rgb(255, 0, 255); box-shadow: 0 0 25px rgba(255, 0, 255, 0.6); }
   100% { border-color: rgb(255, 0, 0);   box-shadow: 0 0 25px rgba(255, 0, 0, 0.6); }
+}
+
+@keyframes drawPath {
+  from { stroke-dashoffset: 1000; }
+  to { stroke-dashoffset: 0; }
+}
+
+@keyframes seatPulseBlink {
+  0% { opacity: 1; filter: drop-shadow(0 0 0px var(--primary)); }
+  50% { opacity: 0.4; filter: drop-shadow(0 0 10px var(--primary)); }
+  100% { opacity: 1; filter: drop-shadow(0 0 0px var(--primary)); }
+}
+
+.route-path {
+  stroke-dasharray: 1000;
+  stroke-dashoffset: 1000;
+  animation: drawPath 2.5s ease-out forwards;
+}
+
+.seat-blink {
+  animation: seatPulseBlink 1.5s infinite ease-in-out;
+  transform-origin: center;
 }
 
 .rgb-scanning {
@@ -217,7 +272,7 @@ body {
 .ticket-inner {
   position: relative;
   z-index: 1;
-  background: #111827; /* Darker navy for better contrast */
+  background: linear-gradient(to right, var(--ticket-bg-main) 65%, var(--ticket-bg-stub) 65%);
   border-radius: 18px;
   flex: 1;
   padding: 1.5rem;
@@ -240,7 +295,7 @@ body {
   top: 8%;
   bottom: 8%;
   width: 0;
-  border-left: 2px dashed rgba(255, 255, 255, 0.1);
+  border-left: 1px solid var(--card-border);
   pointer-events: none;
   transform: translateX(-50%);
 }
@@ -296,9 +351,9 @@ body {
 }
 
 .highlight-card {
-  background: linear-gradient(145deg, rgba(59, 130, 246, 0.15), rgba(30, 41, 59, 0.8));
-  border: 1px solid rgba(59, 130, 246, 0.3);
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2), inset 0 0 10px rgba(59, 130, 246, 0.1);
+  background: var(--card-bg);
+  border: 1px solid var(--primary);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
 }
 
 .card-header {
@@ -345,7 +400,7 @@ body {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background: rgba(255,255,255,0.03);
+  background: var(--surface-subtle);
   padding: 1rem;
   border-radius: 12px;
   border: 1px solid var(--card-border);
@@ -353,12 +408,13 @@ body {
 }
 .status-item:hover {
   transform: translateY(-2px);
-  background: rgba(255,255,255,0.05);
+  background: var(--surface-inner);
 }
 
 .item-name {
   font-weight: 500;
   font-size: 0.9rem;
+  color: var(--text-main);
 }
 
 .status-indicator-wrapper {
@@ -415,10 +471,10 @@ body {
 }
 
 .alert-content {
-  background: rgba(30, 41, 59, 0.95);
+  background: var(--card-bg);
   backdrop-filter: blur(12px);
-  border: 1px solid var(--primary-glow);
-  box-shadow: 0 4px 15px rgba(0,0,0,0.4);
+  border: 1px solid var(--card-border);
+  box-shadow: 0 10px 40px rgba(0,0,0,0.2);
   border-radius: 30px;
   padding: 10px 20px;
   display: flex;

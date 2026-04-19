@@ -118,7 +118,7 @@ const StadiumAssistant = ({ zones, stalls, parkingLots, onClose, onNavigate }) =
 
   return (
     <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.85)', backdropFilter: 'blur(10px)', zIndex: 3000, display: 'flex', alignItems: 'flex-end', justifyContent: 'center' }} onClick={onClose}>
-      <div style={{ background: 'var(--bg-dark)', width: '100%', maxWidth: '450px', height: '85vh', borderRadius: '30px 30px 0 0', display: 'flex', flexDirection: 'column', overflow: 'hidden', borderTop: '1px solid rgba(255,255,255,0.1)', boxShadow: '0 -20px 50px rgba(0,0,0,0.5)' }} onClick={e => e.stopPropagation()}>
+      <div style={{ background: 'var(--bg-dark)', width: '100%', maxWidth: '450px', height: '85vh', borderRadius: '30px 30px 0 0', display: 'flex', flexDirection: 'column', overflow: 'hidden', borderTop: '1px solid var(--card-border)', boxShadow: '0 -20px 50px rgba(0,0,0,0.5)' }} onClick={e => e.stopPropagation()}>
         {/* Header */}
         <div style={{ padding: '1.2rem', borderBottom: '1px solid var(--card-border)', display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: 'rgba(255,255,255,0.02)' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
@@ -126,7 +126,7 @@ const StadiumAssistant = ({ zones, stalls, parkingLots, onClose, onNavigate }) =
               <Bot size={22} />
             </div>
             <div>
-              <h3 style={{ fontSize: '1.1rem', fontWeight: 'bold', color: '#fff' }}>Stadium AI Assistant</h3>
+              <h3 style={{ fontSize: '1.1rem', fontWeight: 'bold', color: 'var(--text-main)' }}>Stadium AI Assistant</h3>
               <div style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
                  <div style={{ width: '6px', height: '6px', background: 'var(--status-clear)', borderRadius: '50%' }}></div>
                  <span style={{ fontSize: '0.7rem', color: 'var(--text-muted)', fontWeight: '600' }}>ONLINE • MULTILINGUAL</span>
@@ -142,7 +142,7 @@ const StadiumAssistant = ({ zones, stalls, parkingLots, onClose, onNavigate }) =
             <button 
               key={lang} 
               onClick={() => changeLanguage(lang)}
-              style={{ padding: '6px 12px', fontSize: '0.75rem', borderRadius: '8px', border: '1px solid var(--card-border)', background: language === lang ? 'var(--primary)' : 'rgba(255,255,255,0.03)', color: '#fff', cursor: 'pointer', fontWeight: 'bold' }}
+              style={{ padding: '6px 12px', fontSize: '0.75rem', borderRadius: '8px', border: '1px solid var(--card-border)', background: language === lang ? 'var(--primary)' : 'var(--surface-subtle)', color: language === lang ? 'var(--text-inverse)' : 'var(--text-main)', cursor: 'pointer', fontWeight: 'bold' }}
             >
               {lang === 'en' ? 'ENGLISH' : lang === 'ta' ? 'தமிழ்' : 'हिन्दी'}
             </button>
@@ -156,8 +156,8 @@ const StadiumAssistant = ({ zones, stalls, parkingLots, onClose, onNavigate }) =
               <div style={{ 
                 padding: '12px 16px', 
                 borderRadius: msg.sender === 'user' ? '20px 4px 20px 20px' : '4px 20px 20px 20px',
-                background: msg.sender === 'user' ? 'var(--primary)' : 'rgba(255,255,255,0.08)',
-                color: '#fff',
+                background: msg.sender === 'user' ? 'var(--primary)' : 'var(--surface-subtle)',
+                color: msg.sender === 'user' ? 'var(--text-inverse)' : 'var(--text-main)',
                 fontSize: '0.9rem',
                 lineHeight: '1.5',
                 boxShadow: msg.sender === 'user' ? '0 4px 15px rgba(59, 130, 246, 0.3)' : 'none'
@@ -211,7 +211,7 @@ const StadiumAssistant = ({ zones, stalls, parkingLots, onClose, onNavigate }) =
               onChange={(e) => setInputText(e.target.value)}
               onKeyPress={(e) => e.key === 'Enter' && handleSend()}
               placeholder="How can I help you?"
-              style={{ flex: 1, padding: '14px 18px', borderRadius: '16px', border: '1px solid rgba(255,255,255,0.1)', background: 'rgba(0,0,0,0.3)', color: '#fff', fontSize: '1rem', outline: 'none' }}
+              style={{ flex: 1, padding: '14px 18px', borderRadius: '16px', border: '1px solid var(--card-border)', background: 'var(--surface-inner)', color: 'var(--text-main)', fontSize: '1rem', outline: 'none' }}
             />
             <button 
               onClick={() => handleSend()}

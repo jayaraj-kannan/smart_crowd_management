@@ -85,7 +85,7 @@ const EventInteract = () => {
                     onClick={() => handleVote(poll.id, option.id)}
                     style={{ 
                       position: 'relative', width: '100%', padding: '12px 16px', borderRadius: '12px', border: poll.voted ? 'none' : '1px solid var(--card-border)', 
-                      background: 'rgba(255,255,255,0.03)', color: '#fff', textAlign: 'left', cursor: poll.voted ? 'default' : 'pointer', overflow: 'hidden',
+                      background: 'var(--surface-subtle)', color: 'var(--text-main)', textAlign: 'left', cursor: poll.voted ? 'default' : 'pointer', overflow: 'hidden',
                       transition: 'all 0.3s'
                     }}
                   >
@@ -126,13 +126,13 @@ const EventInteract = () => {
              onChange={(e) => setInputText(e.target.value)}
              onKeyPress={(e) => e.key === 'Enter' && handlePost()}
              placeholder="Discuss the match or ask a question..."
-             style={{ flex: 1, padding: '12px 16px', borderRadius: '14px', border: '1px solid var(--card-border)', background: 'rgba(255,255,255,0.03)', color: '#fff', fontSize: '0.85rem' }}
+             style={{ flex: 1, padding: '12px 16px', borderRadius: '14px', border: '1px solid var(--card-border)', background: 'var(--surface-subtle)', color: 'var(--text-main)', fontSize: '0.85rem' }}
            />
            <button 
              onClick={handlePost}
-             style={{ padding: '0 16px', background: 'var(--primary)', color: '#fff', border: 'none', borderRadius: '14px', cursor: 'pointer' }}
+             style={{ padding: '0 16px', background: 'var(--primary)', color: 'var(--text-inverse)', border: 'none', borderRadius: '14px', cursor: 'pointer' }}
            >
-             <Send size={18} />
+             <Send size={18} color="var(--text-inverse)" />
            </button>
         </div>
 
@@ -142,7 +142,7 @@ const EventInteract = () => {
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                  <div style={{ width: '28px', height: '28px', borderRadius: '50%', background: 'linear-gradient(45deg, var(--primary), #2dd4bf)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                    <User size={14} color="#fff" />
+                    <User size={14} color="var(--text-inverse)" />
                  </div>
                  <span style={{ fontSize: '0.8rem', fontWeight: 'bold' }}>{item.user}</span>
                  {item.category === 'Announcement' && (

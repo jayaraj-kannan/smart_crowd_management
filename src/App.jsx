@@ -9,7 +9,7 @@ import StadiumAssistant from './components/StadiumAssistant';
 import EventInteract from './components/EventInteract';
 import Logo from './components/Logo';
 
-import { Activity, ShieldAlert, Home, Map as MapIcon, Ticket, QrCode, Calendar, MapPin, Settings, X, Car, AlertOctagon, HandMetal, MessageSquare, Bot } from 'lucide-react';
+import { Activity, ShieldAlert, Home, Map as MapIcon, Ticket, QrCode, Calendar, MapPin, Settings, X, Car, AlertOctagon, HandMetal, MessageSquare, Bot, Sun, Moon } from 'lucide-react';
 import './queue-styles.css';
 import './ar-styles.css';
 import './emergency-styles.css';
@@ -29,13 +29,15 @@ const initialZones = [
 ];
 
 const initialStalls = [
-  { id: 101, name: 'Burger Counter', type: 'food', waitTime: 12 },
-  { id: 102, name: 'Pizza & Snacks', type: 'food', waitTime: 25 },
-  { id: 103, name: 'Filter Coffee Booth', type: 'food', category: 'coffee', waitTime: 4 },
-  { id: 104, name: 'Pavillion Washroom (M)', type: 'washroom', waitTime: 3 },
-  { id: 105, name: 'Level 1 Washroom (W)', type: 'washroom', waitTime: 8 },
-  { id: 106, name: 'Main Exit', type: 'exit', waitTime: 15 },
-  { id: 107, name: 'Pavillion Exit', type: 'exit', waitTime: 5 }
+  { id: 101, name: 'Chai Kings', type: 'food', waitTime: 5, diet: 'veg', serving: 'Tea, Coffee, Buns & Iced Teas' },
+  { id: 102, name: 'KFC', type: 'food', waitTime: 20, diet: 'non-veg', serving: 'Popcorn Chicken' },
+  { id: 103, name: 'Wow! Momo', type: 'food', waitTime: 12, diet: 'both', serving: 'Hot Momos' },
+  { id: 104, name: 'Domino\'s Pizza', type: 'food', waitTime: 15, diet: 'both', serving: 'Pizzas & Sides' },
+  { id: 105, name: 'Burger King', type: 'food', waitTime: 10, diet: 'both', serving: 'Burgers & Wraps' },
+  { id: 106, name: 'Pavillion Washroom (M)', type: 'washroom', waitTime: 3 },
+  { id: 107, name: 'Level 1 Washroom (W)', type: 'washroom', waitTime: 8 },
+  { id: 108, name: 'Main Exit', type: 'exit', waitTime: 15 },
+  { id: 109, name: 'Pavillion Exit', type: 'exit', waitTime: 5 }
 ];
 
 function App() {
@@ -51,6 +53,18 @@ function App() {
   const [sosReason, setSosReason] = useState(null);
   const [showSOSOptions, setShowSOSOptions] = useState(false);
   const [showAdminMenu, setShowAdminMenu] = useState(false);
+  const [theme, setTheme] = useState(localStorage.getItem('zentry-theme') || 'dark');
+  const [showSeatRoute, setShowSeatRoute] = useState(false);
+
+  // Persist theme to localStorage
+  useEffect(() => {
+    localStorage.setItem('zentry-theme', theme);
+  }, [theme]);
+
+  const toggleTheme = () => {
+    setTheme(prev => prev === 'dark' ? 'light' : 'dark');
+  };
+
   const [activeEmergencyPayload, setActiveEmergencyPayload] = useState(null);
   const [isExitPhase, setIsExitPhase] = useState(false);
 
@@ -202,28 +216,40 @@ function App() {
     }
   }, [isCheckedIn]);
 
-  // NOTE: Auto-clear logic removed as per user request to keep alerts visible at the top.
-  /*
+  // Auto-dismiss logic for alerts
   useEffect(() => {
-    if (currentAlert && !currentAlert.persistent) {
+    if (currentAlert) {
+      const delay = currentAlert.persistent ? 5000 : 3000;
       const timer = setTimeout(() => {
         setCurrentAlert(null);
-      }, 8000);
+      }, delay);
       return () => clearTimeout(timer);
     }
   }, [currentAlert]);
-  */
 
   return (
-    <div className="app-container">
-      <header className="app-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '0.8rem 1.2rem' }}>
+    <div className={`app-container ${theme === 'light' ? 'light-theme' : ''}`}>
+      <header className="app-header">
         <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
           <span className="mdi mdi-zend pulse" style={{ fontSize: '28px', color: 'var(--primary)' }}></span>
           <h1 style={{ fontSize: '1.4rem', fontWeight: 'bold', margin: 0, letterSpacing: '0.5px' }}>Zentry</h1>
         </div>
-        <button className="emergency-trigger" onClick={() => setShowAdminMenu(true)} style={{ background: 'transparent', border: 'none', color: 'var(--text-muted)' }}>
-          <Settings size={20} />
-        </button>
+        <div className="header-actions" style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+          <button
+            onClick={toggleTheme}
+            className="theme-toggle"
+            style={{ background: 'transparent', border: 'none', color: 'var(--text-muted)', cursor: 'pointer', display: 'flex', alignItems: 'center', padding: '4px' }}
+          >
+            {theme === 'dark' ? <Sun size={20} /> : <Moon size={20} />}
+          </button>
+          <button
+            className="settings-trigger"
+            onClick={() => setShowAdminMenu(true)}
+            style={{ background: 'transparent', border: 'none', color: 'var(--text-muted)', cursor: 'pointer', display: 'flex', alignItems: 'center', padding: '4px' }}
+          >
+            <Settings size={20} />
+          </button>
+        </div>
       </header>
 
       {showAdminMenu && (
@@ -296,7 +322,7 @@ function App() {
           <>
             <section className="map-section">
               {(isEmergency || sosState !== 'idle') && (
-                <div className="emergency-banner" style={{ background: 'rgba(239, 68, 68, 0.2)', border: '1px solid #ef4444', padding: '12px', borderRadius: '12px', marginBottom: '15px', display: 'flex', flexDirection: 'column', gap: '8px', color: '#f8fafc' }}>
+                <div className="emergency-banner" style={{ background: 'rgba(239, 68, 68, 0.2)', border: '1px solid #ef4444', padding: '12px', borderRadius: '12px', marginBottom: '15px', display: 'flex', flexDirection: 'column', gap: '8px', color: 'var(--text-main)' }}>
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                     <span style={{ fontSize: '0.9rem' }}>🚨 <strong>{sosState === 'active' ? 'SECURITY DISPATCHED' : sosState === 'dispatching' ? 'SOS TRANSMITTING' : (activeEmergencyPayload || 'CRITICAL EMERGENCY')}</strong></span>
                   </div>
@@ -304,21 +330,27 @@ function App() {
                     <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>{sosState !== 'idle' ? 'Personnel are tracking your location. Stay where you are.' : 'Follow safe route to Gate 2 (Pavillion)'}</span>
                     <button
                       onClick={() => handleNavigation('Gate 2 (Pavillion)')}
-                      style={{ background: '#ef4444', color: '#fff', border: 'none', padding: '6px 12px', borderRadius: '8px', fontWeight: 'bold', cursor: 'pointer', boxShadow: '0 2px 10px rgba(239, 68, 68, 0.4)' }}
+                      style={{ background: '#ef4444', color: 'var(--text-inverse)', border: 'none', padding: '6px 12px', borderRadius: '8px', fontWeight: 'bold', cursor: 'pointer', boxShadow: '0 2px 10px rgba(239, 68, 68, 0.4)' }}
                     >
                       {sosState !== 'idle' ? 'Your Location' : 'Evacuation Route'}
                     </button>
                   </div>
                 </div>
               )}
-              <HeatMap zones={zones} isEmergency={isEmergency || sosState !== 'idle'} isPreCheckin={!isCheckedIn} />
+              <HeatMap 
+                zones={zones} 
+                isEmergency={isEmergency || sosState !== 'idle'} 
+                isPreCheckin={!isCheckedIn} 
+                showSeatRoute={showSeatRoute} 
+                isExitPhase={isExitPhase}
+              />
             </section>
 
             {(!isEmergency && !isExitPhase && sosState === 'idle') && (
               <>
                 {/* Unified Sub-Tabs for all Users */}
                 <div style={{ padding: '0 1rem', marginBottom: '1.5rem' }}>
-                  <div style={{ display: 'flex', background: 'rgba(255,255,255,0.05)', borderRadius: '12px', padding: '4px', border: '1px solid var(--card-border)' }}>
+                  <div style={{ display: 'flex', background: 'var(--surface-subtle)', borderRadius: '12px', padding: '4px', border: '1px solid var(--card-border)' }}>
                     <button
                       style={{ flex: 1, padding: '10px 4px', border: 'none', borderRadius: '10px', background: homeTab === 'live' ? 'rgba(59, 130, 246, 0.2)' : 'transparent', color: homeTab === 'live' ? 'var(--primary)' : 'var(--text-muted)', fontWeight: '600', transition: 'all 0.2s', cursor: 'pointer', fontSize: '0.8rem' }}
                       onClick={() => setHomeTab('live')}
@@ -354,8 +386,8 @@ function App() {
                   {homeTab === 'live' && (
                     !isCheckedIn ? (
                       <div style={{ padding: '0 1rem', textAlign: 'center', marginTop: '1.5rem' }}>
-                        <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '2rem' }}>
-                           <span className="mdi mdi-zend" style={{ fontSize: '72px', color: 'var(--primary)', filter: 'drop-shadow(0 0 20px rgba(59, 130, 246, 0.4))' }}></span>
+                        <div style={{ display: 'flex', justifyContent: 'center' }}>
+                          <span className="mdi mdi-zend" style={{ fontSize: '72px', color: 'var(--primary)', filter: 'drop-shadow(0 0 20px rgba(59, 130, 246, 0.4))' }}></span>
                         </div>
                         <span style={{ color: 'var(--primary)', fontWeight: 'bold', fontSize: '0.8rem', textTransform: 'uppercase', letterSpacing: '2px' }}>Live Event Access</span>
                         <h3 style={{ marginBottom: '8px', color: 'var(--text-main)', fontSize: '1.4rem', marginTop: '4px' }}>Welcome to the Grand Finale!</h3>
@@ -364,9 +396,9 @@ function App() {
                         </p>
                         <button
                           onClick={() => setActiveTab('tickets')}
-                          style={{ background: 'var(--primary)', color: '#fff', padding: '14px 32px', borderRadius: '14px', border: 'none', fontWeight: 'bold', fontSize: '1rem', cursor: 'pointer', boxShadow: '0 8px 15px rgba(59, 130, 246, 0.3)' }}
+                          style={{ background: 'var(--primary)', color: 'var(--text-inverse)', padding: '14px 32px', borderRadius: '14px', border: 'none', fontWeight: 'bold', fontSize: '1rem', cursor: 'pointer', boxShadow: '0 8px 15px rgba(59, 130, 246, 0.3)' }}
                         >
-                          Check-In & Open Maps
+                          Check-In
                         </button>
                       </div>
                     ) : (
@@ -421,7 +453,7 @@ function App() {
                     </div>
                   </div>
 
-                  <div style={{ display: 'flex', justifyContent: 'space-between', background: 'rgba(255,255,255,0.03)', padding: '8px 12px', borderRadius: '12px', border: '1px solid rgba(255,255,255,0.05)' }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', background: 'var(--surface-inner)', padding: '8px 12px', borderRadius: '12px', border: '1px solid var(--card-border)' }}>
                     <div style={{ textAlign: 'center' }}>
                       <p style={{ fontSize: '0.6rem', color: 'var(--text-muted)', textTransform: 'uppercase' }}>Block</p>
                       <p style={{ fontSize: '0.85rem', fontWeight: '700', color: 'var(--text-main)' }}>C</p>
@@ -449,7 +481,7 @@ function App() {
                     </div>
                   ) : (
                     <div style={{ textAlign: 'center' }}>
-                      <div style={{ background: '#fff', padding: '6px', borderRadius: '12px', border: checkInStatus === 'scanned' ? '3px solid var(--status-clear)' : '2px solid rgba(255,255,255,0.8)', boxShadow: checkInStatus === 'scanned' ? '0 0 15px rgba(16, 185, 129, 0.2)' : 'none' }}>
+                      <div style={{ background: 'var(--text-inverse)', padding: '6px', borderRadius: '12px', border: checkInStatus === 'scanned' ? '3px solid var(--status-clear)' : '2px solid var(--card-border)', boxShadow: checkInStatus === 'scanned' ? '0 0 15px rgba(16, 185, 129, 0.2)' : 'none' }}>
                         <QrCode size={70} color="#000" />
                       </div>
                       {checkInStatus === 'scanning' && (
@@ -471,17 +503,21 @@ function App() {
             <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
               {checkInStatus === 'scanned' && (
                 <button
-                  onClick={() => setActiveTab('home')}
-                  style={{ width: '100%', background: 'var(--primary)', color: '#fff', border: 'none', padding: '14px', borderRadius: '14px', fontSize: '0.95rem', fontWeight: 'bold', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '10px', boxShadow: '0 8px 16px rgba(59, 130, 246, 0.4)' }}
+                  onClick={() => {
+                    setActiveTab('home');
+                    setHomeTab('live');
+                    setShowSeatRoute(true);
+                  }}
+                  style={{ width: '100%', background: 'var(--primary)', color: 'var(--text-inverse)', border: 'none', padding: '14px', borderRadius: '14px', fontSize: '0.95rem', fontWeight: 'bold', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '10px', boxShadow: '0 8px 16px rgba(59, 130, 246, 0.4)' }}
                 >
-                  <MapPin size={18} /> Locate My Seat
+                  <MapPin size={18} color="var(--text-inverse)" /> Locate My Seat
                 </button>
               )}
 
               {(checkInStatus === 'qr_shown' || checkInStatus === 'scanned') && (
                 <button
                   onClick={handleUpdateStatus}
-                  style={{ width: '100%', background: 'rgba(255,255,255,0.05)', border: '1px solid var(--card-border)', color: 'var(--text-muted)', padding: '12px', borderRadius: '14px', fontSize: '0.85rem', cursor: 'pointer', fontWeight: '600' }}
+                  style={{ width: '100%', background: 'var(--surface-subtle)', border: '1px solid var(--card-border)', color: 'var(--text-muted)', padding: '12px', borderRadius: '14px', fontSize: '0.85rem', cursor: 'pointer', fontWeight: '600' }}
                 >
                   Sync Ticket Status
                 </button>
@@ -490,7 +526,7 @@ function App() {
 
             {checkInStatus !== 'scanned' && (
               <button
-                style={{ width: '100%', padding: '1.2rem', background: 'var(--primary)', color: '#fff', borderRadius: '16px', border: 'none', fontSize: '1rem', fontWeight: '600', marginTop: '1.5rem', cursor: 'pointer', boxShadow: '0 4px 20px rgba(59, 130, 246, 0.4)', display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '10px' }}
+                style={{ width: '100%', padding: '1.2rem', background: 'var(--primary)', color: 'var(--text-inverse)', borderRadius: '16px', border: 'none', fontSize: '1rem', fontWeight: '600', marginTop: '1.5rem', cursor: 'pointer', boxShadow: '0 4px 20px rgba(59, 130, 246, 0.4)', display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '10px' }}
                 onClick={() => handleNavigation('Gate 2 (Pavillion)')}
               >
                 <MapPin size={20} /> Navigate to Gate 2 (Pavillion)
@@ -508,7 +544,11 @@ function App() {
           </button>
           {isCheckedIn && (
             <>
-              <button className={`nav-item ${activeTab === 'sos' ? 'active' : ''}`} onClick={handleSOS} style={{ color: sosState !== 'idle' ? '#ef4444' : 'inherit' }}>
+              <button
+                className={`nav-item ${activeTab === 'sos' ? 'active' : ''}`}
+                onClick={handleSOS}
+                style={{ color: sosState !== 'idle' ? 'var(--status-congested)' : 'var(--text-muted)' }}
+              >
                 <AlertOctagon size={24} className={sosState === 'dispatching' ? 'pulse' : ''} />
                 <span style={{ fontWeight: sosState !== 'idle' ? 'bold' : 'normal' }}>SOS</span>
               </button>
@@ -522,7 +562,7 @@ function App() {
       )}
 
       {/* Floating AI Assistant Button */}
-      {isCheckedIn && !isEmergency && (
+      {isCheckedIn && !isEmergency && !showAdminMenu && (
         <button
           onClick={() => setShowAssistant(true)}
           className="pulse"
@@ -530,7 +570,7 @@ function App() {
             position: 'fixed', bottom: '100px', right: '20px',
             width: '64px', height: '64px', borderRadius: '50%',
             background: 'linear-gradient(135deg, var(--primary), #2dd4bf)',
-            border: 'none', color: '#fff', cursor: 'pointer',
+            border: 'none', color: 'var(--text-inverse)', cursor: 'pointer',
             boxShadow: '0 8px 30px rgba(59, 130, 246, 0.5)',
             zIndex: 1000, display: 'flex', alignItems: 'center', justifyContent: 'center'
           }}

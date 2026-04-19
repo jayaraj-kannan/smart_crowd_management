@@ -16,9 +16,9 @@ const ExitScheduler = ({ onNavigate }) => {
 
   return (
     <div className="exit-scheduler">
-      <div className="card highlight-card" style={{ padding: '1.5rem', borderRadius: '24px', border: '1px solid var(--primary)', background: 'linear-gradient(145deg, rgba(59, 130, 246, 0.15), rgba(15, 23, 42, 0.9))', marginBottom: '1.5rem' }}>
+      <div className="card highlight-card" style={{ padding: '1.5rem', borderRadius: '24px', border: '1px solid var(--primary)', background: 'var(--card-bg)', marginBottom: '1.5rem', boxShadow: '0 8px 32px rgba(0,0,0,0.1)' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '1rem' }}>
-          <div style={{ background: 'var(--primary)', padding: '10px', borderRadius: '14px', color: '#fff' }}>
+          <div style={{ background: 'var(--primary)', padding: '10px', borderRadius: '14px', color: 'var(--text-inverse)' }}>
             <Clock size={24} />
           </div>
           <div style={{ textAlign: 'right' }}>
@@ -30,8 +30,8 @@ const ExitScheduler = ({ onNavigate }) => {
         <div style={{ display: 'flex', gap: '8px', marginBottom: '1.2rem' }}>
            <div style={{ flex: 1, height: '4px', borderRadius: '2px', background: 'var(--status-clear)' }}></div>
            <div style={{ flex: 1, height: '4px', borderRadius: '2px', background: 'var(--primary)', animation: 'pulse 1.5s infinite' }}></div>
-           <div style={{ flex: 1, height: '4px', borderRadius: '2px', background: 'rgba(255,255,255,0.1)' }}></div>
-           <div style={{ flex: 1, height: '4px', borderRadius: '2px', background: 'rgba(255,255,255,0.1)' }}></div>
+           <div style={{ flex: 1, height: '4px', borderRadius: '2px', background: 'var(--surface-subtle)' }}></div>
+           <div style={{ flex: 1, height: '4px', borderRadius: '2px', background: 'var(--surface-subtle)' }}></div>
         </div>
 
         <p style={{ fontSize: '0.9rem', color: 'var(--text-muted)', lineHeight: '1.5' }}>
