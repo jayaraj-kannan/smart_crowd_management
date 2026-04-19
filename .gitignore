@@ -1,14 +1,24 @@
-# Ignore everything by default
-/*
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
 
-# Except the dist folder
-!/dist/
+node_modules
+dist
+dist-ssr
+*.local
 
-# Except this .gitignore file
-!/.gitignore
-
-# Except the README if you want to keep it
-!/README.md
-
-# Un-ignore contents of dist
-!/dist/**
+# Editor directories and files
+.vscode/*
+!.vscode/extensions.json
+.idea
+.DS_Store
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
